@@ -13,6 +13,12 @@
                 "errorMessage": "Sample name must be provided and cannot contain spaces",
                 "meta": ["id"]
             },
+            "group": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Group ID cannot contain spaces",
+                "meta": ["group"]
+            },
             "fastq_1": {
                 "type": "string",
                 "format": "file-path",
