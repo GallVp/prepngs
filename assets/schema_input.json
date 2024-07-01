@@ -19,14 +19,14 @@
                 "errorMessage": "Group ID cannot contain spaces",
                 "meta": ["group"]
             },
-            "fastq_1": {
+            "reads_1": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
                 "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             },
-            "fastq_2": {
+            "reads_2": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
@@ -34,6 +34,6 @@
                 "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             }
         },
-        "required": ["sample", "fastq_1"]
+        "required": ["sample", "reads_1"]
     }
 }
