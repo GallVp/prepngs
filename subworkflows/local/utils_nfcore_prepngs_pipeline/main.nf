@@ -76,25 +76,24 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create channel from input file provided through params.input
     //
-    Channel
-        .fromSamplesheet("input")
-        .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-                }
-        }
-        .groupTuple()
-        .map {
-            validateInputSamplesheet(it)
-        }
-        .map {
-            meta, fastqs ->
-                return [ meta, fastqs.flatten() ]
-        }
-        .set { ch_samplesheet }
+    ch_input                        = Channel.fromSamplesheet("input")
+                                    | map { meta, reads_1, reads_2 ->
+                                        ! reads_2
+                                        ? [ meta + [ single_end: true ], [ reads_1 ] ]
+                                        : [ meta + [ single_end: false ], [ reads_1, reads_2 ] ]
+                                    }
+
+    //
+    // Perform additional validation on samplesheet
+    //
+    ch_samplesheet                  = ch_input
+                                    | map { meta, reads -> [ meta.group, meta, reads ] }
+                                    | groupTuple()
+                                    | map { validateInputSamplesheet(it) }
+                                    | collect
+                                    | map { [ it ] }
+                                    | combine(ch_input)
+                                    | map { stats, meta, reads -> [ meta, reads ] }
 
     emit:
     samplesheet = ch_samplesheet
@@ -152,15 +151,17 @@ workflow PIPELINE_COMPLETION {
 // Validate channels from input samplesheet
 //
 def validateInputSamplesheet(input) {
-    def (metas, fastqs) = input[1..2]
+    def (group, metas, reads) = input[0..2]
 
-    // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
+    if ( group == null ) { return 'OK' }
+
+    // Check that multiple samples of the same group are of the same datatype i.e. single-end / paired-end
     def endedness_ok = metas.collect{ it.single_end }.unique().size == 1
     if (!endedness_ok) {
-        error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
+        error("Please check input samplesheet -> Multiple samples of a group must be of the same datatype i.e. single-end or paired-end: ${metas[0].group}")
     }
 
-    return [ metas[0], fastqs ]
+    return 'OK'
 }
 
 //

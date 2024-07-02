@@ -32,31 +32,34 @@ flowchart LR
   BAM2FASTQ ==> FASTQC
   FASTQC ==> FASTP
   FASTP ==> FASTQC2[FASTQC]
+
+  FASTP ==> CAT
+  CAT ==> FastQ
+
   FASTQC2 ==> MULTIQC
 ```
 
-1. BAM to FASTQ ([`PBTK`](https://github.com/PacificBiosciences/pbtk)), `optional`
+1. BAM to FASTQ ([`PBTK`](https://github.com/PacificBiosciences/pbtk), `optional`)
 2. Raw read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 3. Adapter trimming ([`FASTP`](https://github.com/OpenGene/fastp))
 4. Trimmed read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-5. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+5. Cat trimmed reads by group ([`cat`](https://www.linfo.org/cat.html), `optional`)
+6. Present QC ([`MultiQC`](http://multiqc.info/))
 
 ## Usage
+
+Refer to [usage](./docs/usage.md), [parameters](./docs/parameters.md) and [output](./docs/output.md) documents for details.
 
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-First, prepare a samplesheet with your input data that looks as follows:
-
-`samplesheet.csv`:
+First, prepare a `samplesheet.csv` with your input data. Each row represents a fastq/bam file (single-end) or a pair of fastq files (paired end). For example,
 
 ```csv
 sample,reads_1,reads_2
 test1,SRR4292758_00_R1.fastq.gz,SRR4292758_00_R2.fastq.gz
 test2,alz.ccs.bam
 ```
-
-Each row represents a fastq/bam file (single-end) or a pair of fastq files (paired end).
 
 Now, you can run the pipeline using:
 

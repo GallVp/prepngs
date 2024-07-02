@@ -7,6 +7,7 @@ include { paramsSummaryMap                  } from 'plugin/nf-validation'
 
 include { PBTK_PBINDEX                      } from '../modules/gallvp/pbtk/pbindex/main'
 include { PBTK_BAM2FASTQ                    } from '../modules/nf-core/pbtk/bam2fastq/main'
+include { CAT_FASTQ                         } from '../modules/nf-core/cat/fastq/main'
 include { MULTIQC                           } from '../modules/nf-core/multiqc/main'
 
 include { methodsDescriptionText            } from '../subworkflows/local/utils_nfcore_prepngs_pipeline'
@@ -70,12 +71,30 @@ workflow PREPNGS {
         params.min_trimmed_reads
     )
 
+    ch_trim_reads                           = FASTQ_FASTQC_UMITOOLS_FASTP.out.reads
+
     ch_multiqc_files                        = ch_multiqc_files
                                             | mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_raw_zip)
                                             | mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_json)
                                             | mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_trim_zip)
 
     ch_versions                             = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions)
+
+    // MODULE: CAT_FASTQ
+    ch_cat_fastq_inputs                     = ! params.cat_by_group
+                                            ? Channel.empty()
+                                            : ch_trim_reads
+                                            | filter { meta, reads -> meta.group }
+                                            | map { meta, reads ->
+                                                [ [ id: meta.group, single_end: meta.single_end ], reads ]
+                                            }
+                                            | groupTuple
+                                            | map { meta, files -> [ meta, files.flatten() ] }
+
+    CAT_FASTQ ( ch_cat_fastq_inputs )
+
+    ch_grouped_reads                        = CAT_FASTQ.out.reads
+    ch_versions                             = ch_versions.mix(CAT_FASTQ.out.versions.first())
 
     //
     // Collate and save software versions
