@@ -16,7 +16,7 @@
 %%{init: {
     'theme': 'base',
     'themeVariables': {
-    'fontSize': '52px",
+    'fontSize': '14px",
     'primaryColor': '#9A6421',
     'primaryTextColor': '#ffffff',
     'primaryBorderColor': '#9A6421',
