@@ -41,6 +41,11 @@
                         "git_sha": "ecc75f2fbb0151c3fc44a621c87ed51e674950c0",
                         "installed_by": ["modules"]
                     },
+                    "seqkit/fq2fa": {
+                        "branch": "master",
+                        "git_sha": "1accbbdc68928ed0435763a662b6ec6e4a8a25ec",
+                        "installed_by": ["modules"]
+                    },
                     "umitools/extract": {
                         "branch": "master",
                         "git_sha": "d2c5e76f291379f3dd403e48e46ed7e6ba5da744",

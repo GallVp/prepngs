@@ -11,6 +11,7 @@ Initial release of gallvp/prepngs, created with the [nf-core](https://nf-co.re/)
 
 1. Added `FASTQ_FASTQC_UMITOOLS_FASTP` sub-workflow to perform `FASTQC`, `FASTP` and `FASTQC`
 2. Added `cat_by_group` param and `CAT_FASTQ` module to concatenate fastq files
+3. Added `save_group_fasta` param and `SEQKIT_FQ2FA` module to convert fastq to fasta
 
 ### `Fixed`
 

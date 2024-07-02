@@ -25,8 +25,13 @@
                 "cat_by_group": {
                     "type": "boolean",
                     "fa_icon": "fas fa-object-group",
-                    "description": "Concatenate samples by group",
+                    "description": "Concatenate samples by group and save group-level FastQ files",
                     "default": true
+                },
+                "save_group_fasta": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-save",
+                    "description": "Save group level Fasta files in addition to FastQ files"
                 },
                 "outdir": {
                     "type": "string",

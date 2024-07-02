@@ -16,7 +16,7 @@
 %%{init: {
     'theme': 'base',
     'themeVariables': {
-    'fontSize': '14px",
+    'fontSize': '12px",
     'primaryColor': '#9A6421',
     'primaryTextColor': '#ffffff',
     'primaryBorderColor': '#9A6421',
@@ -27,24 +27,37 @@
 }}%%
 flowchart LR
   samplesheet(samplesheet.csv) ==> BAM2FASTQ
-  samplesheet(samplesheet.csv) ==> FASTQC
+  samplesheet ==> FASTQC
 
   BAM2FASTQ ==> FASTQC
   FASTQC ==> FASTP
   FASTP ==> FASTQC2[FASTQC]
 
   FASTP ==> CAT
-  CAT ==> FastQ
+  CAT ==> FQ2FA
 
-  FASTQC2 ==> MULTIQC
+  CAT ==> fqout{{FastQ}}
+  FQ2FA ==> faout{{Fasta}}
+
+  FASTQC2 ==> multiqcout{{MultiQC}}
+
+  subgraph
+  multiqcout
+  fqout
+  faout
+  end
+
+  classDef bk fill:#0000
+  class Outputs bk
 ```
 
-1. BAM to FASTQ ([`PBTK`](https://github.com/PacificBiosciences/pbtk), `optional`)
+1. BAM to FastQ ([`PBTK`](https://github.com/PacificBiosciences/pbtk), `optional`)
 2. Raw read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 3. Adapter trimming ([`FASTP`](https://github.com/OpenGene/fastp))
 4. Trimmed read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 5. Cat trimmed reads by group ([`cat`](https://www.linfo.org/cat.html), `optional`)
-6. Present QC ([`MultiQC`](http://multiqc.info/))
+6. Convert trimmed reads to Fasta ([`Seqkit`](https://bioinf.shenwei.me/seqkit/), `optional`)
+7. Present QC ([`MultiQC`](http://multiqc.info/))
 
 ## Usage
 
@@ -92,11 +105,13 @@ The pipeline uses nf-core modules contributed by following authors:
 <a href="https://github.com/robsyme"><img src="https://github.com/robsyme.png" width="50" height="50"></a>
 <a href="https://github.com/mbeavitt"><img src="https://github.com/mbeavitt.png" width="50" height="50"></a>
 <a href="https://github.com/kevinmenden"><img src="https://github.com/kevinmenden.png" width="50" height="50"></a>
+<a href="https://github.com/joseespinosa"><img src="https://github.com/joseespinosa.png" width="50" height="50"></a>
 <a href="https://github.com/jfy133"><img src="https://github.com/jfy133.png" width="50" height="50"></a>
 <a href="https://github.com/felixkrueger"><img src="https://github.com/felixkrueger.png" width="50" height="50"></a>
 <a href="https://github.com/ewels"><img src="https://github.com/ewels.png" width="50" height="50"></a>
 <a href="https://github.com/bunop"><img src="https://github.com/bunop.png" width="50" height="50"></a>
 <a href="https://github.com/abhi18av"><img src="https://github.com/abhi18av.png" width="50" height="50"></a>
+<a href="https://github.com/d-jch"><img src="https://github.com/d-jch.png" width="50" height="50"></a>
 
 ## Contributions and Support
 

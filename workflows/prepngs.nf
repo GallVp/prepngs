@@ -8,6 +8,7 @@ include { paramsSummaryMap                  } from 'plugin/nf-validation'
 include { PBTK_PBINDEX                      } from '../modules/gallvp/pbtk/pbindex/main'
 include { PBTK_BAM2FASTQ                    } from '../modules/nf-core/pbtk/bam2fastq/main'
 include { CAT_FASTQ                         } from '../modules/nf-core/cat/fastq/main'
+include { SEQKIT_FQ2FA                      } from '../modules/nf-core/seqkit/fq2fa/main'
 include { MULTIQC                           } from '../modules/nf-core/multiqc/main'
 
 include { methodsDescriptionText            } from '../subworkflows/local/utils_nfcore_prepngs_pipeline'
@@ -95,6 +96,29 @@ workflow PREPNGS {
 
     ch_grouped_reads                        = CAT_FASTQ.out.reads
     ch_versions                             = ch_versions.mix(CAT_FASTQ.out.versions.first())
+
+    // MODULE: SEQKIT_FQ2FA
+    ch_fq2fa_inputs_branch                  = ( ! params.save_group_fasta
+                                                ? Channel.empty()
+                                                : ch_grouped_reads
+                                            )
+                                            | branch { meta, files ->
+                                                paired: files instanceof List
+                                                single: ! ( files instanceof List )
+                                            }
+
+    ch_fq2fa_inputs                         = ch_fq2fa_inputs_branch.paired
+                                            | flatMap { meta, files ->
+                                                [
+                                                    [ [ id: meta.id, single_end: true, num: 1 ], files[0] ],
+                                                    [ [ id: meta.id, single_end: true, num: 2 ], files[1] ],
+                                                ]
+                                            }
+                                            | mix(ch_fq2fa_inputs_branch.single)
+
+    SEQKIT_FQ2FA ( ch_fq2fa_inputs )
+
+    ch_versions                             = ch_versions.mix(SEQKIT_FQ2FA.out.versions.first())
 
     //
     // Collate and save software versions

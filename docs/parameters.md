@@ -6,13 +6,14 @@ A pipeline to pre-process raw NGS data for downstream reuse across various pipel
 
 Define where the pipeline should find input data and save output data.
 
-| Parameter       | Description                                                                                                              | Type      | Default | Required | Hidden |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------ | --------- | ------- | -------- | ------ |
-| `input`         | Path to comma-separated file containing information about the samples in the experiment.                                 | `string`  |         | True     |        |
-| `cat_by_group`  | Concatenate samples by group                                                                                             | `boolean` | True    |          |        |
-| `outdir`        | The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure. | `string`  |         | True     |        |
-| `email`         | Email address for completion summary.                                                                                    | `string`  |         |          |        |
-| `multiqc_title` | MultiQC report title. Printed as page header, used for filename if not otherwise specified.                              | `string`  |         |          |        |
+| Parameter          | Description                                                                                                              | Type      | Default | Required | Hidden |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------ | --------- | ------- | -------- | ------ |
+| `input`            | Path to comma-separated file containing information about the samples in the experiment.                                 | `string`  |         | True     |        |
+| `cat_by_group`     | Concatenate samples by group and save group-level FastQ files                                                            | `boolean` | True    |          |        |
+| `save_group_fasta` | Save group level Fasta files in addition to FastQ files                                                                  | `boolean` |         |          |        |
+| `outdir`           | The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure. | `string`  |         | True     |        |
+| `email`            | Email address for completion summary.                                                                                    | `string`  |         |          |        |
+| `multiqc_title`    | MultiQC report title. Printed as page header, used for filename if not otherwise specified.                              | `string`  |         |          |        |
 
 ## Trimming options
 
