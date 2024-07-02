@@ -19,6 +19,8 @@ lint:
   nextflow_config:
     - manifest.name
     - manifest.homePage
+    - config_defaults:
+        - params.additional_adapters
 nf_core_version: 2.14.2.dev0
 repository_type: pipeline
 template:

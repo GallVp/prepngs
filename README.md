@@ -53,13 +53,21 @@ Refer to [usage](./docs/usage.md), [parameters](./docs/parameters.md) and [outpu
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-First, prepare a `samplesheet.csv` with your input data. Each row represents a fastq/bam file (single-end) or a pair of fastq files (paired end). For example,
+First, prepare a samplesheet with your input data that looks as follows:
+
+**samplesheet.csv:**
 
 ```csv
-sample,reads_1,reads_2
-test1,SRR4292758_00_R1.fastq.gz,SRR4292758_00_R2.fastq.gz
-test2,alz.ccs.bam
+sample,group,reads_1,reads_2
+test1,,r1.fastq.gz,r2.fastq.gz
+test2,group1,sampleA.ccs.bam
+test3,group1,sampleC.ccs.bam
 ```
+
+Each row represents a sample with a single fastq/bam file (single-end) or a pair of fastq files (paired end). `group` column is optional. When present, it is used to concatenate the samples.
+
+> [!WARNING]
+> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
 
 Now, you can run the pipeline using:
 
@@ -69,9 +77,6 @@ nextflow run gallvp/prepngs \
    --input samplesheet.csv \
    --outdir <OUTDIR>
 ```
-
-> [!WARNING]
-> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
 
 ## Credits
 

@@ -25,7 +25,8 @@
                 "cat_by_group": {
                     "type": "boolean",
                     "fa_icon": "fas fa-object-group",
-                    "description": "Concatenate samples by group"
+                    "description": "Concatenate samples by group",
+                    "default": true
                 },
                 "outdir": {
                     "type": "string",
