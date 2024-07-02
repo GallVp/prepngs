@@ -2,6 +2,17 @@
     "name": "gallvp/prepngs",
     "homePage": "https://github.com/gallvp/prepngs",
     "repos": {
+        "https://github.com/PlantandFoodResearch/nxf-modules.git": {
+            "modules": {
+                "pfr": {
+                    "pbtk/pbindex": {
+                        "branch": "main",
+                        "git_sha": "429f064fb5fdf155405dda82a0334b8172f360e8",
+                        "installed_by": ["modules"]
+                    }
+                }
+            }
+        },
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
@@ -18,6 +29,11 @@
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "b7ebe95761cd389603f9cc0e0dc384c0f663815a",
+                        "installed_by": ["modules"]
+                    },
+                    "pbtk/bam2fastq": {
+                        "branch": "master",
+                        "git_sha": "ecc75f2fbb0151c3fc44a621c87ed51e674950c0",
                         "installed_by": ["modules"]
                     },
                     "umitools/extract": {

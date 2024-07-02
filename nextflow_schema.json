@@ -67,6 +67,12 @@
                     "fa_icon": "fas fa-hand-paper",
                     "description": "Minimum number of trimmed reads below which samples are removed from further processing. Some downstream steps in the pipeline will fail if this threshold is too low"
                 },
+                "additional_adapters": {
+                    "type": "string",
+                    "default": "${projectDir}/assets/adapters.fasta",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Fasta file containing additional adapter for trimming"
+                },
                 "extra_fastp_args": {
                     "type": "string",
                     "fa_icon": "fas fa-plus",

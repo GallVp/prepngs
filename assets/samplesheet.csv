@@ -4,3 +4,4 @@ sarscov2_2,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/
 homo_sapiens_fq,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz
 homo_sapiens_se,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz
 hic,https://raw.githubusercontent.com/nf-core/test-datasets/hic/data/SRR4292758_00_R1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/hic/data/SRR4292758_00_R2.fastq.gz
+hifi,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/pacbio/bam/alz.ccs.bam

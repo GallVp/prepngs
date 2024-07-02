@@ -3,12 +3,15 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { MULTIQC                           } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap                  } from 'plugin/nf-validation'
-include { paramsSummaryMultiqc              } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML            } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText            } from '../subworkflows/local/utils_nfcore_prepngs_pipeline'
 
+include { PBTK_PBINDEX                      } from '../modules/pfr/pbtk/pbindex/main'
+include { PBTK_BAM2FASTQ                    } from '../modules/nf-core/pbtk/bam2fastq/main'
+include { MULTIQC                           } from '../modules/nf-core/multiqc/main'
+
+include { methodsDescriptionText            } from '../subworkflows/local/utils_nfcore_prepngs_pipeline'
+include { softwareVersionsToYAML            } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { paramsSummaryMultiqc              } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { FASTQ_FASTQC_UMITOOLS_FASTP       } from '../subworkflows/nf-core/fastq_fastqc_umitools_fastp/main'
 
 /*
@@ -20,14 +23,38 @@ include { FASTQ_FASTQC_UMITOOLS_FASTP       } from '../subworkflows/nf-core/fast
 workflow PREPNGS {
 
     take:
-    ch_samplesheet                          // channel: samplesheet read in from --input
+    ch_input_samplesheet                    // channel: samplesheet read in from --input
 
     main:
 
     ch_versions                             = Channel.empty()
     ch_multiqc_files                        = Channel.empty()
     ch_multiqc_extra_files                  = Channel.empty()
-    ch_multiqc_reports                      = Channel.empty()
+
+    //
+    // Add file type
+    //
+    ch_samplesheet_branch                   = ch_input_samplesheet
+                                            | branch { meta, files ->
+                                                def type = files.first().extension == 'bam' ? 'bam' : 'fastq'
+
+                                                bam:    type == 'bam'
+                                                fastq:  type != 'bam'
+                                            }
+
+    // MODULE: PBTK_PBINDEX
+    PBTK_PBINDEX ( ch_samplesheet_branch.bam )
+
+    ch_bam_pbi                              = ch_samplesheet_branch.bam
+                                            | join(PBTK_PBINDEX.out.pbi)
+    ch_versions                             = ch_versions.mix(PBTK_PBINDEX.out.versions.first())
+
+    // MODULE: PBTK_BAM2FASTQ
+    PBTK_BAM2FASTQ ( ch_bam_pbi )
+
+    ch_samplesheet                          = ch_samplesheet_branch.fastq
+                                            | mix(PBTK_BAM2FASTQ.out.fastq)
+    ch_versions                             = ch_versions.mix(PBTK_BAM2FASTQ.out.versions.first())
 
     // SUBSORKFLOW: FASTQ_FASTQC_UMITOOLS_FASTP
     FASTQ_FASTQC_UMITOOLS_FASTP (
@@ -37,7 +64,7 @@ workflow PREPNGS {
         true,                               // skip_umi_extract
         0,                                  // umi_discard_read
         params.skip_trimming,
-        [],                                 // adapter_fasta,
+        file(params.additional_adapters, checkIfExists: true) ?: [],
         params.save_trimmed_fail,
         false,                              // save_merged
         params.min_trimmed_reads
