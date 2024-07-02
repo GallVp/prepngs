@@ -5,7 +5,7 @@ nextflow_process {
     process "PBTK_PBINDEX"
 
     tag "modules"
-    tag "modules_pfr"
+    tag "modules_gallvp"
     tag "pbtk"
     tag "pbtk/pbindex"
 

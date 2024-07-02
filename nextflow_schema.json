@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/gallvp/prepngs/master/nextflow_schema.json",
     "title": "gallvp/prepngs pipeline parameters",
-    "description": "A pipeline to preprocess raw NGS data for downstream reuse across various pipelines",
+    "description": "A pipeline to pre-process raw NGS data for downstream reuse across various pipelines",
     "type": "object",
     "definitions": {
         "input_output_options": {

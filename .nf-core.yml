@@ -23,7 +23,7 @@ nf_core_version: 2.14.2.dev0
 repository_type: pipeline
 template:
   author: Usman Rashid
-  description: A pipeline to preprocess raw NGS data for downstream reuse across various
+  description: A pipeline to pre-process raw NGS data for downstream reuse across various
     pipelines
   force: true
   is_nfcore: false

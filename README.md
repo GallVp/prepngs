@@ -12,14 +12,34 @@
 
 **gallvp/prepngs** is a bioinformatics pipeline that pre-processes NGS data for downstream reuse across various pipelines.
 
-<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-     workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
+```mermaid
+%%{init: {
+    'theme': 'base',
+    'themeVariables': {
+    'fontSize': '52px",
+    'primaryColor': '#9A6421',
+    'primaryTextColor': '#ffffff',
+    'primaryBorderColor': '#9A6421',
+    'lineColor': '#B180A8',
+    'secondaryColor': '#455C58',
+    'tertiaryColor': '#ffffff'
+  }
+}}%%
+flowchart LR
+  samplesheet(samplesheet.csv) ==> BAM2FASTQ
+  samplesheet(samplesheet.csv) ==> FASTQC
 
-1. Raw read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Adapter trimming ([`FASTP`](https://github.com/OpenGene/fastp))
-3. Trimmed read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-4. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+  BAM2FASTQ ==> FASTQC
+  FASTQC ==> FASTP
+  FASTP ==> FASTQC2[FASTQC]
+  FASTQC2 ==> MULTIQC
+```
+
+1. BAM to FASTQ ([`PBTK`](https://github.com/PacificBiosciences/pbtk)), `optional`
+2. Raw read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
+3. Adapter trimming ([`FASTP`](https://github.com/OpenGene/fastp))
+4. Trimmed read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
+5. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
 
 ## Usage
 
@@ -31,15 +51,14 @@ First, prepare a samplesheet with your input data that looks as follows:
 `samplesheet.csv`:
 
 ```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+sample,reads_1,reads_2
+test1,SRR4292758_00_R1.fastq.gz,SRR4292758_00_R2.fastq.gz
+test2,alz.ccs.bam
 ```
 
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
+Each row represents a fastq/bam file (single-end) or a pair of fastq files (paired end).
 
 Now, you can run the pipeline using:
-
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
 
 ```bash
 nextflow run gallvp/prepngs \
@@ -55,9 +74,21 @@ nextflow run gallvp/prepngs \
 
 gallvp/prepngs was originally written by Usman Rashid.
 
-We thank the following people for their extensive assistance in the development of this pipeline:
+The pipeline uses nf-core modules contributed by following authors:
 
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
+<a href="https://github.com/drpatelh"><img src="https://github.com/drpatelh.png" width="50" height="50"></a>
+<a href="https://github.com/adamrtalbot"><img src="https://github.com/adamrtalbot.png" width="50" height="50"></a>
+<a href="https://github.com/grst"><img src="https://github.com/grst.png" width="50" height="50"></a>
+<a href="https://github.com/gallvp"><img src="https://github.com/gallvp.png" width="50" height="50"></a>
+<a href="https://github.com/maxulysse"><img src="https://github.com/maxulysse.png" width="50" height="50"></a>
+<a href="https://github.com/robsyme"><img src="https://github.com/robsyme.png" width="50" height="50"></a>
+<a href="https://github.com/mbeavitt"><img src="https://github.com/mbeavitt.png" width="50" height="50"></a>
+<a href="https://github.com/kevinmenden"><img src="https://github.com/kevinmenden.png" width="50" height="50"></a>
+<a href="https://github.com/jfy133"><img src="https://github.com/jfy133.png" width="50" height="50"></a>
+<a href="https://github.com/felixkrueger"><img src="https://github.com/felixkrueger.png" width="50" height="50"></a>
+<a href="https://github.com/ewels"><img src="https://github.com/ewels.png" width="50" height="50"></a>
+<a href="https://github.com/bunop"><img src="https://github.com/bunop.png" width="50" height="50"></a>
+<a href="https://github.com/abhi18av"><img src="https://github.com/abhi18av.png" width="50" height="50"></a>
 
 ## Contributions and Support
 

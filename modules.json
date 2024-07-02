@@ -2,12 +2,12 @@
     "name": "gallvp/prepngs",
     "homePage": "https://github.com/gallvp/prepngs",
     "repos": {
-        "https://github.com/PlantandFoodResearch/nxf-modules.git": {
+        "https://github.com/GallVp/nxf-components.git": {
             "modules": {
-                "pfr": {
+                "gallvp": {
                     "pbtk/pbindex": {
                         "branch": "main",
-                        "git_sha": "429f064fb5fdf155405dda82a0334b8172f360e8",
+                        "git_sha": "b1b21af9d0298a87a328c3e5664eea7904538cfb",
                         "installed_by": ["modules"]
                     }
                 }

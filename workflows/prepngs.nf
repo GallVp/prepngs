@@ -5,7 +5,7 @@
 */
 include { paramsSummaryMap                  } from 'plugin/nf-validation'
 
-include { PBTK_PBINDEX                      } from '../modules/pfr/pbtk/pbindex/main'
+include { PBTK_PBINDEX                      } from '../modules/gallvp/pbtk/pbindex/main'
 include { PBTK_BAM2FASTQ                    } from '../modules/nf-core/pbtk/bam2fastq/main'
 include { MULTIQC                           } from '../modules/nf-core/multiqc/main'
 
