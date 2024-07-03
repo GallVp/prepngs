@@ -2,26 +2,31 @@
 
 ## Introduction
 
-This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
-
-The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
-
-<!-- TODO nf-core: Write this documentation describing your workflow's output -->
+This document describes the output produced by the pipeline. The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
 
 ## Pipeline overview
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-- [FastQC](#fastqc) - Raw read QC
+- [BAM to FastQ](#bam-to-fastq) - Convert input Bam files to FastQ files
+- [FastQC Raw](#fastqc-raw) - Raw read QC statistics
+- [FASTP](#fastp) - Adapter trimming
+- [FastQC Trimmed](#fastqc-trimmed) - QC statistics for the reads trimmed by FASTP
+- [CAT](#cat) - Concatenate reads by group
+- [Seqkit/fq2fa](#seqkitfq2fa) - Convert trimmed reads to Fasta
 - [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
-### FastQC
+### BAM to FastQ
+
+The conversion is performed using the `bam2fastq` command of the [PBTK](https://github.com/PacificBiosciences/pbtk) toolkit from Pacific Biosciences.
+
+### FastQC Raw
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `fastqc/`
+- `fastqc_raw/`
   - `*_fastqc.html`: FastQC report containing quality metrics.
   - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
 
@@ -29,15 +34,65 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
 
-![MultiQC - FastQC sequence counts plot](images/mqc_fastqc_counts.png)
+### FASTP
 
-![MultiQC - FastQC mean quality scores plot](images/mqc_fastqc_quality.png)
+<details markdown="1">
+<summary>Output files</summary>
 
-![MultiQC - FastQC adapter content plot](images/mqc_fastqc_adapter.png)
+- `fastp/`
+  - `fail`
+    - `*.fail.fastq.gz`: Reads which failed to pass the filter
+  - `html`
+    - `*.fastp.html`: Sample wise HTML report
+  - `json`
+    - `*.fastp.json`: Sample wise JSON report
+  - `log`
+    - `*.fastp.log`: Sample wise log file
+  - `pass`
+    - `*.fastp.fastq.gz`: Reads which passed the filter
 
-:::note
-The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They may contain adapter sequence and potentially regions with low quality.
-:::
+</details>
+
+[FASTP](https://github.com/OpenGene/fastp) is an ultra-fast all-in-one FASTQ preprocessor to perform QC, adapter trimming, filtering, splitting and merging.
+
+### FastQC Trimmed
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `fastqc_trim/`
+  - `*_fastqc.html`: FastQC report containing quality metrics.
+  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+
+</details>
+
+FastQC is applied to the trimmed reads from FASTP `*.fastp.fastq.gz`.
+
+### CAT
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `groups/`
+  - `fastq`
+    - `*.merged.fastq.gz`: Concatenated fastq file
+
+</details>
+
+Samples with the same `group` column in the `samplesheet.csv` are concatenated together. For single-end samples, a single `*.merged.fastq.gz` file is created. For paired-end samples, two separate files for `reads_1` and `reads_2` are saved. The concatenation is performed with the [cat](https://www.linfo.org/cat.html) command.
+
+### Seqkit/fq2fa
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `groups/`
+  - `fasta`
+    - `*.fa.gz`: Concatenated fasta file
+
+</details>
+
+Concatenated FastQ files `*.merged.fastq.gz` are converted into Fasta files with `fq2fa` command of the [Seqkit](https://bioinf.shenwei.me/seqkit/) toolkit.
 
 ### MultiQC
 
