@@ -25,6 +25,7 @@
     'tertiaryColor': '#ffffff'
   }
 }}%%
+
 flowchart LR
   samplesheet(samplesheet.csv) ==> BAM2FASTQ
   samplesheet ==> FASTQC
@@ -36,12 +37,12 @@ flowchart LR
   FASTP ==> CAT
   CAT ==> FQ2FA
 
-  CAT ==> fqout{{FastQ}}
-  FQ2FA ==> faout{{Fasta}}
+  CAT ==> fqout(FastQ)
+  FQ2FA ==> faout(Fasta)
 
-  FASTQC2 ==> multiqcout{{MultiQC}}
+  FASTQC2 ==> multiqcout(MultiQC)
 
-  subgraph
+  subgraph Outputs[" "]
   multiqcout
   fqout
   faout
@@ -89,6 +90,14 @@ nextflow run gallvp/prepngs \
    -profile <docker/singularity/.../institute> \
    --input samplesheet.csv \
    --outdir <OUTDIR>
+```
+
+### Plant&Food Users
+
+Download the pipeline to your `/workspace/$USER` folder. Change the parameters defined in the [pfr/params.json](./pfr/params.json) file. Submit the pipeline to SLURM for execution.
+
+```bash
+sbatch ./pfr_prepngs
 ```
 
 ## Credits

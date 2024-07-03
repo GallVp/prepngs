@@ -1,0 +1,13 @@
+{
+    "input": "",
+    "outdir": "./results",
+    "cat_by_group": true,
+    "save_group_fasta": false,
+    "skip_trimming": false,
+    "save_trimmed_fail": true,
+    "min_trimmed_reads": 10000,
+    "extra_fastp_args": "",
+    "max_memory": "72.GB",
+    "max_cpus": 12,
+    "max_time": "12.h"
+}
