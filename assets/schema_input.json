@@ -9,14 +9,14 @@
         "properties": {
             "sample": {
                 "type": "string",
-                "pattern": "^\\S+$",
+                "pattern": "^\\w+$",
                 "errorMessage": "Sample name must be provided and cannot contain spaces",
                 "meta": ["id"],
                 "unique": true
             },
             "group": {
                 "type": "string",
-                "pattern": "^\\S+$",
+                "pattern": "^\\w+$",
                 "errorMessage": "Group ID cannot contain spaces",
                 "meta": ["group"]
             },
