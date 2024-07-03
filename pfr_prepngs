@@ -37,6 +37,7 @@ if [ $full_test_flag -eq 1 ]; then
         main.nf \
         -c pfr/profile.config \
         -profile pfr,apptainer,test_full \
+        --outdir ./results \
         -resume
 else
     nextflow \
